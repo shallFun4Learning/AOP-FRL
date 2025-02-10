@@ -18,7 +18,7 @@ from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import Dataset
 import datasets
 import sys
-import transformer
+import transformers
 
 
 print("=" * 40)
