@@ -18,6 +18,19 @@ from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import Dataset
 import datasets
 
+
+print("=" * 40)
+print("Python Version:", sys.version)
+print("=" * 40)
+print("PyTorch Version:", torch.__version__)
+print("Transformers Version:", transformers.__version__)
+print("Accelerate Version:", accelerate.__version__)
+print("Datasets Version:", datasets.__version__)
+print("RDKit Version:", rdkit.__version__)
+print("Torch-Geometric Version:", torch_geometric.__version__)
+print("=" * 40)
+
+
 parser = argparse.ArgumentParser(description="Train a combined model using GCN and ESM2")
 parser.add_argument("--data_file_path", type=str, required=True, help="Path to the CSV data file")
 parser.add_argument("--esm2_model_path", type=str, required=True, help="Path to the ESM2 model directory")
