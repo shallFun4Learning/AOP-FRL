@@ -18,6 +18,7 @@ from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import Dataset
 import datasets
 import sys
+import transformer
 
 
 print("=" * 40)
@@ -27,7 +28,6 @@ print("PyTorch Version:", torch.__version__)
 print("Transformers Version:", transformers.__version__)
 print("Accelerate Version:", accelerate.__version__)
 print("Datasets Version:", datasets.__version__)
-print("RDKit Version:", rdkit.__version__)
 print("Torch-Geometric Version:", torch_geometric.__version__)
 print("=" * 40)
 
