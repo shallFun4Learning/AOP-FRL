@@ -20,15 +20,6 @@ import datasets
 import sys
 import transformers
 
-import tqdm
-import sys
-from datasets.utils.logging import disable_progress_bar
-from transformers.utils import logging
-tqdm.utils.TQDM_DEFAULTS['file'] = sys.stdout
-tqdm.utils.TQDM_DEFAULTS['dynamic_ncols'] = True
-logging.get_logger("transformers").handlers[0].stream = sys.stdout
-disable_progress_bar()
-print("Starting Training...")
 
 
 print("=" * 40)
@@ -419,6 +410,7 @@ for fold in range(5):
         remove_unused_columns=False,
         load_best_model_at_end=False,
         metric_for_best_model='ACC',
+        disable_tqdm=False
     )
 
     trainer = Trainer(
