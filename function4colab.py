@@ -20,13 +20,17 @@ import datasets
 import sys
 import transformers
 
-from tqdm import tqdm
+import tqdm
 import sys
+from datasets.utils.logging import disable_progress_bar
+from transformers.utils import logging
+tqdm.utils.TQDM_DEFAULTS['file'] = sys.stdout
+tqdm.utils.TQDM_DEFAULTS['dynamic_ncols'] = True
+logging.get_logger("transformers").handlers[0].stream = sys.stdout
+disable_progress_bar()
+print("Starting Training...")
 
 
-tqdm.__init__ = lambda self, *args, **kwargs: tqdm.__init__(self, *args, file=sys.stdout, dynamic_ncols=True, **kwargs)
-
-print("Starting Training...", flush=True)
 print("=" * 40)
 print("Python Version:", sys.version)
 print("=" * 40)
