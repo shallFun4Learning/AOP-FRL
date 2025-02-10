@@ -19,7 +19,14 @@ from torch.utils.data import Dataset
 import datasets
 import sys
 import transformers
+from tqdm import tqdm
+from datasets.utils.logging import disable_progress_bar
 
+# 禁用 tqdm 进度条
+tqdm.__init__ = lambda *args, **kwargs: None
+
+# 禁用 datasets 的进度条
+disable_progress_bar()
 
 
 print("=" * 40)
