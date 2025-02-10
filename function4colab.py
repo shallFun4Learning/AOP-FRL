@@ -26,9 +26,9 @@ print("Python Version:", sys.version)
 print("=" * 40)
 print("PyTorch Version:", torch.__version__)
 print("Transformers Version:", transformers.__version__)
-print("Accelerate Version:", accelerate.__version__)
-print("Datasets Version:", datasets.__version__)
-print("Torch-Geometric Version:", torch_geometric.__version__)
+#print("Accelerate Version:", accelerate.__version__)
+#print("Datasets Version:", datasets.__version__)
+#print("Torch-Geometric Version:", torch_geometric.__version__)
 print("=" * 40)
 
 
