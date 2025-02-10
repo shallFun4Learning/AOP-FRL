@@ -20,7 +20,13 @@ import datasets
 import sys
 import transformers
 
+from tqdm import tqdm
+import sys
 
+
+tqdm.__init__ = lambda self, *args, **kwargs: tqdm.__init__(self, *args, file=sys.stdout, dynamic_ncols=True, **kwargs)
+
+print("Starting Training...", flush=True)
 print("=" * 40)
 print("Python Version:", sys.version)
 print("=" * 40)
