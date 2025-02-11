@@ -5,9 +5,7 @@
 The **AOP-FRL** algorithm is designed to identify antioxidant peptides using a combination of sequnce and structral features. 
 This repository contains the code for training, inference, and dataset preprocessing for this novel method.
 
-We provide local source code and Notebooks that can be run online on Google Colab. 
-If you only want to learn about the information for online notebooks, you can click [OnlineNotebooks](#OnlineNotebooks).
-
+We have completed the development and testing locally (Hardware: Tesla V100 GPU, Environment: refer to [Installation](#Installation)). At the same time, we performed code compatibility testing on Google Colab (Using T4 and A100 GPU) and provided a notebook for online execution, which may offer a more streamlined experience, please refer to **[OnlineNotebooks](#OnlineNotebooks)**.
 
 ## Features
 
@@ -109,10 +107,18 @@ We have prepared notebooks that can be run online on Google Colab. The usage ins
 
 3. Download the ESM-2 150M model file (available here: [HuggingFace](https://huggingface.co/facebook/esm2_t30_150M_UR50D/tree/main)), and copy it to the corresponding folder.
 
-4. Use our notebooks([Colab](https://colab.research.google.com/drive/1lo31jFqFnlDDrgxHaQHIp8QjY9dY6ohb?usp=sharing)). You need to modify the paths in the code to align with the paths in your Google Drive.
+4. Use our ~~notebooks([Colab](https://colab.research.google.com/drive/1lo31jFqFnlDDrgxHaQHIp8QjY9dY6ohb?usp=sharing)).~~**(The new version is provided below, and this version is deprecated.)** You need to modify the paths in the code to align with the paths in your Google Drive.
 
 5. You have completed all the steps. Now, run it. ^_^
 
+🚀 **2025.2.10 Update:**
+
+Due to the default Python version in Google Colab being updated to 3.11, it is no longer possible to directly install the original development environment. Therefore, we have made the following optimizations:
+You can **[click here](https://colab.research.google.com/drive/1KJki-l3QtHU3ZPy-KhdB4R-f3U2yLpsU?usp=sharing)** to access or view our online notebook, or copy the link and open it in your browser:[https://colab.research.google.com/drive/1KJki-l3QtHU3ZPy-KhdB4R-f3U2yLpsU?usp=sharing].
+- **Enhanced user experience**: The Google Drive method has been deprecated. Now, you can directly use Git to retrieve Python and model files in the notebook.
+- **Using CondaColab to manage the environment**: This allows we to start training with the original development environment.
+
+💥**P.S.**: We attempted to test using Google Colab’s V100 and even upgraded to a Pro membership for this purpose. However, as of now, we have not been able to access an available V100 GPU.
 
 ## License
 Academic Free License (AFL) v. 3.0
