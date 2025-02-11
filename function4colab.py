@@ -23,7 +23,9 @@ from tqdm import tqdm
 from datasets.utils.logging import disable_progress_bar
 
 # 禁用 tqdm 进度条
-tqdm.__init__ = lambda *args, **kwargs: None
+import tqdm
+tqdm.tqdm = lambda *args, **kwargs: tqdm.std.tqdm(*args, disable=True, **kwargs)
+
 
 # 禁用 datasets 的进度条
 disable_progress_bar()
