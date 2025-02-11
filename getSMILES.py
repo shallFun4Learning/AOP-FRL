@@ -76,7 +76,7 @@ df['SMILES'] = smiles_list
 output_csv = generate_output_path(input_csv)
 df.to_csv(output_csv, index=False)
 
-# 打印统计结果
+# Print statistical results
 print(f"Total number of input sequences: {total_sequences}")
 print(f"Number of sequences successfully converted: {successful_conversions}")
 print(f"Number of non-standard amino acids found and processed: {total_non_standard_residues}")
