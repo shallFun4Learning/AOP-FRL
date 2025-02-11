@@ -16,13 +16,13 @@ from torch_geometric.nn import GCNConv, global_mean_pool, BatchNorm
 from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import Dataset
 import datasets
-
+# Get the GPU device index
 k=int(os.environ.get("CUDA_VISIBLE_DEVICES", ""))
 data_file_path = "/data/xuxf/ANTIO/data/03_p90_AO_db_smiles_p.csv"
 esm2_model_path = '/data/xuxf/antiO_p70/esm2_t30_150M_UR50D'
 out_file_path='/data/xuxf/ANTIO/outfile/mymodel'
 res_path=f'/data/xuxf/ANTIO/final{k}_metrics_inf.csv'
-# 定义原子特征的提取函数
+# Define the function to extract atomic features
 def atom_features(atom):
     features = np.array([
         atom.GetAtomicNum(),
@@ -38,7 +38,7 @@ def atom_features(atom):
     ], dtype=np.float32)
     return features
 
-# 定义化学键特征的提取函数
+# Define the function to extract bond features
 def bond_features(bond):
     features = np.array([
         bond.GetBondTypeAsDouble(),
@@ -48,7 +48,7 @@ def bond_features(bond):
     ], dtype=np.float32)
     return features
 
-# 转换SMILES到分子对象的函数
+# Convert SMILES to molecular graph
 def smiles_to_graph(smiles):
     try:
         mol = Chem.MolFromSmiles(smiles)
@@ -74,19 +74,19 @@ def smiles_to_graph(smiles):
         edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
         edge_attr = torch.tensor(edge_attr, dtype=torch.float)
 
-        # 确保new_x的大小与所有特征的大小匹配
+        #Ensure that the size of new-x matches the size of all features
         new_x = torch.zeros((num_nodes, len(atom_features_list[0]) + edge_attr.size(1)))
 
-        # 将边特征与节点特征拼接
+        #Splicing edge features with node features
         for i, atom_feature in enumerate(atom_features_list):
             connected_edges = edge_index[1] == i
             if connected_edges.any():
-                # 对所有连接的边特征求平均并与节点特征拼接
+                #Average all connected edge features and concatenate them with node features
                 connected_edge_features = edge_attr[connected_edges].mean(dim=0)
                 concatenated_features = torch.cat((torch.tensor(atom_feature, dtype=torch.float), connected_edge_features))
                 new_x[i] = concatenated_features
             else:
-                new_x[i][:len(atom_feature)] = torch.tensor(atom_feature, dtype=torch.float)  # 仅填充节点特征部分
+                new_x[i][:len(atom_feature)] = torch.tensor(atom_feature, dtype=torch.float) #Only fill in the node feature part
         
         return Data(x=new_x, edge_index=edge_index, edge_attr=edge_attr)
     
@@ -94,10 +94,10 @@ def smiles_to_graph(smiles):
         print(e)
         raise SystemExit("Invalid data detected, stopping execution.")
 
-# 数据增强函数
+#Data augmentation function
 def augment_sequence(sequence, prob=0.1):
-    """随机替换、插入或删除肽段序列中的氨基酸"""
-    amino_acids = 'ACDEFGHIKLMNPQRSTVWY'  # 常见的20种氨基酸
+    """Randomly replace, insert, or delete amino acids in peptide sequences"""
+    amino_acids = 'ACDEFGHIKLMNPQRSTVWY'  # 20 common amino acids
     new_sequence = list(sequence)
 
     i = 0
@@ -108,10 +108,10 @@ def augment_sequence(sequence, prob=0.1):
                 new_sequence[i] = random.choice(amino_acids)
             elif choice == 'insert':
                 new_sequence.insert(i, random.choice(amino_acids))
-                i += 1  # 插入后跳过新插入的元素
+                i += 1  # Skip newly inserted elements after insertion
             elif choice == 'delete' and len(new_sequence) > 1:
                 new_sequence.pop(i)
-                continue  # 删除后跳过索引增加以防止越界
+                continue  # Skip index addition after deletion to prevent out of bounds
         i += 1
 
     return ''.join(new_sequence)
@@ -121,7 +121,7 @@ def reverse_sequence(sequence):
     return sequence[::-1]
 
 def augment_smiles(smiles, num_augmentations=5):
-    """通过随机断键和重排增强SMILES序列"""
+    """Enhance SMILES sequences through random bond breaking and rearrangement"""
     mol = Chem.MolFromSmiles(smiles)
     augmented_smiles = set()
     for _ in range(num_augmentations):
@@ -130,18 +130,18 @@ def augment_smiles(smiles, num_augmentations=5):
         num_bonds = rwmol.GetNumBonds()
 
         if num_bonds > 0:
-            # 随机选择一个化学键的索引
+            # Randomly select an index for a chemical bond
             bond_idx = random.randint(0, num_bonds - 1)
             bond = rwmol.GetBondWithIdx(bond_idx)
 
-            # 获取两个原子索引
+            # Obtain two atomic indices
             atom1 = bond.GetBeginAtomIdx()
             atom2 = bond.GetEndAtomIdx()
 
-            # 删除化学键
+            # Delete chemical bonds
             rwmol.RemoveBond(atom1, atom2)
         
-        # 生成新的SMILES
+        # Generate new SMILES
         try:
             new_smiles = Chem.MolToSmiles(rwmol)
             augmented_smiles.add(new_smiles)
@@ -330,22 +330,22 @@ for fold in range(5):
     train_noag_sub = torch.utils.data.Subset(train_noag, train_idx)
     test_subset = torch.utils.data.Subset(test_dataset, test_idx)
 
-    # 获取每个子集的原始序列
+    # Obtain the original sequence of each subset
     train_sequences = [train_subset[i]['original_sequence'] for i in range(len(train_subset))]
     train_noag_sequences = [train_noag_sub[i]['original_sequence'] for i in range(len(train_noag_sub))]
     test_sequences = [test_subset[i]['original_sequence'] for i in range(len(test_subset))]
 
-    # 获取原始的划分数据
+    # Obtain raw partition data
     df_train_sequences = df[df['partition'] != fold]['sequence'].tolist()
     df_test_sequences = df[df['partition'] == fold]['sequence'].tolist()
 
-    # 检查训练数据集的原始序列
+    # Check the original sequence of the training dataset
     train_consistent = set(train_sequences) == set(df_train_sequences)
     train_noag_consistent = set(train_noag_sequences) == set(df_train_sequences)
     train_noag_train_consistent = set(train_noag_sequences) == set(train_sequences)
     test_consistent = set(test_sequences) == set(df_test_sequences)
 
-    # 检查各数据集之间是否有重复
+    # Check for duplication between datasets
     test_train_overlap = set(test_sequences).intersection(set(train_sequences))
     test_train_noag_overlap = set(test_sequences).intersection(set(train_noag_sequences))
 
@@ -412,7 +412,7 @@ for fold in range(5):
     train_noag_subset_data = [{'sequence': item['original_sequence'], 'label': item['labels'].item(), 'partition': item['partition']} for item in train_noag_sub]
     test_subset_data = [{'sequence': item['original_sequence'], 'label': item['labels'].item(), 'partition': item['partition']} for item in test_subset]
     
-    # 转换为 DataFrame
+    # cov 2 DataFrame
     train_subset_df = pd.DataFrame(train_subset_data)
     train_noag_subset_df = pd.DataFrame(train_noag_subset_data)
     test_subset_df = pd.DataFrame(test_subset_data)
@@ -421,12 +421,12 @@ for fold in range(5):
     train_noag_subset_path = outPutDir+os.sep+'train_noag_subset.csv'
     test_subset_path = outPutDir+os.sep+'test_subset.csv'
     
-    # 保存为 CSV
+    # cov 2  CSV
     train_subset_df.to_csv(train_subset_path, index=False)
     train_noag_subset_df.to_csv(train_noag_subset_path, index=False)
     test_subset_df.to_csv(test_subset_path, index=False)
 
-    print("CSV 文件保存成功。")
+    print("CSV file saved successfully.")
     
     predictions = trainer.predict(test_subset)
     metrics = Getmetrics.getMetrics((predictions.predictions, predictions.label_ids))
