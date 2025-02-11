@@ -307,7 +307,7 @@ class CombinedDataset(Dataset):
         graph = smiles_to_graph(smiles)
 
         item = {
-            'original_sequence': original_sequence,  # 返回原始序列
+            'original_sequence': original_sequence,  # return sequence
             'sequence': sequence,
             'esm2_input_ids': esm2_encoded['input_ids'].squeeze(0),
             'esm2_attention_mask': esm2_encoded['attention_mask'].squeeze(0),
