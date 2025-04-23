@@ -109,16 +109,6 @@ These metrics will be calculated and saved using the Getmetrics.py module after 
 ## OnlineNotebooks
 We have prepared notebooks that can be run online on Google Colab. The usage instructions are as follows:
 
-1. Download the source code [Onedrive-Source](https://4wgz12-my.sharepoint.com/:u:/g/personal/admin_4wgz12_onmicrosoft_com/EQXYmjaXJylEhcp05pKEwXkBuAFyl5nikhb6wDdw5y9IOg?e=zrabg2) package we have prepared and upload it to your Google Drive.
-
-2. Download the dataset provided by [AnOxPePred](https://github.com/TobiasHeOl/AnOxPePred), use rdkit to derive SIMLES, retain the FRS and partition columns, and rename FRS to label. The final column names should include [sequence, label, partition, SMILES]. Alternatively, you can use the preprocessed version we provided (available for download here: [Onedirve-datasets](https://pan.baidu.com/s/1Aknw5fjO2T8fRwpveDzr7w?pwd=1234)). Copy the dataset to the data folder.
-
-3. Download the ESM-2 150M model file (available here: [HuggingFace](https://huggingface.co/facebook/esm2_t30_150M_UR50D/tree/main)), and copy it to the corresponding folder.
-
-4. Use our ~~notebooks([Colab](https://colab.research.google.com/drive/1lo31jFqFnlDDrgxHaQHIp8QjY9dY6ohb?usp=sharing)).~~**(The new version is provided below, and this version is deprecated.)** You need to modify the paths in the code to align with the paths in your Google Drive.
-
-5. You have completed all the steps. Now, run it. ^_^
-
 🚀 **2025.2.10 Update:**
 
 Due to the default Python version in Google Colab being updated to 3.11, it is no longer possible to directly install the original development environment. Therefore, we have made the following optimizations:
