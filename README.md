@@ -131,7 +131,9 @@ You can **[click here](https://colab.research.google.com/drive/1KJki-l3QtHU3ZPy-
 💥**P.S.**: We attempted to test using Google Colab’s V100 and even upgraded to a Pro membership for this purpose. However, as of now, we have not been able to access an available V100 GPU.
 
 ## License
-Academic Free License (AFL) v. 3.0
+This project, AOP-DRL, is licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+You are free to use, modify, and distribute this work, provided you give appropriate credit to the original authors.
 
 ## Supports
 Feel free to submit an issue or contact the author(sfun@foxmail.com) if you encounter any problems during use.
